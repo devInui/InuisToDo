@@ -1,4 +1,8 @@
 import React, { memo } from "react";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import Task from "./Task";
 
 function SortableChildTasks({
@@ -18,7 +22,10 @@ function SortableChildTasks({
   isEvenOrder,
 }) {
   return (
-    <>
+    <SortableContext
+      items={taskList.map((task) => task.taskId)}
+      strategy={verticalListSortingStrategy}
+    >
       {taskList.map((task) => (
         <Task
           key={task.taskId}
@@ -38,7 +45,7 @@ function SortableChildTasks({
           isEvenOrder={isEvenOrder}
         />
       ))}
-    </>
+    </SortableContext>
   );
 }
 

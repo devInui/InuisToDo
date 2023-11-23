@@ -12,11 +12,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { arrayMove } from "@dnd-kit/sortable";
 
 import Project from "./Project";
@@ -46,7 +42,8 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 3,
+        delay: 250,
+        tolerance: 0,
       },
     }),
     useSensor(KeyboardSensor, {
