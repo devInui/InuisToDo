@@ -1,9 +1,9 @@
 import React, { memo, useCallback } from "react";
-import Task from "./Task";
 import TaskCard from "./Card/TaskCard";
 import CardUIFront from "./Card/CardUIFront";
 import CardUIBack from "./Card/CardUIBack";
 import CardUIBottom from "./Card/CardUIBottom";
+import SortableChildTasks from "./SortableChildTasks";
 
 const RenderTask = ({
   task: topTask,
@@ -161,26 +161,25 @@ const RenderTask = ({
           handleAdd={handleAddTaskEnd}
         />
       )}
-      {!topTask.isClose &&
-        topTask.childTasks.map((task) => (
-          <Task
-            key={task.taskId}
-            task={task}
-            parentId={topTask.taskId}
-            centerPinTaskId={centerPinTaskId}
-            addChildTaskFront={addChildTaskFront}
-            addChildTaskEnd={addChildTaskEnd}
-            insertBrotherTask={insertBrotherTask}
-            deleteTask={deleteTask}
-            pinFlag={pinFlag}
-            toggleChecked={toggleChecked}
-            toggleClose={toggleClose}
-            switchSelect={switchSelect}
-            updateTaskName={updateTaskName}
-            revertLastChange={revertLastChange}
-            isEvenOrder={isEvenOrder}
-          />
-        ))}
+
+      {!topTask.isClose && (
+        <SortableChildTasks
+          taskList={topTask.childTasks}
+          parentId={topTask.taskId}
+          centerPinTaskId={centerPinTaskId}
+          addChildTaskFront={addChildTaskFront}
+          addChildTaskEnd={addChildTaskEnd}
+          insertBrotherTask={insertBrotherTask}
+          deleteTask={deleteTask}
+          pinFlag={pinFlag}
+          toggleChecked={toggleChecked}
+          toggleClose={toggleClose}
+          switchSelect={switchSelect}
+          updateTaskName={updateTaskName}
+          revertLastChange={revertLastChange}
+          isEvenOrder={isEvenOrder}
+        />
+      )}
     </div>
   );
 };

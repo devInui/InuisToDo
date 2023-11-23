@@ -3,6 +3,7 @@ import TaskCard from "./Card/TaskCard";
 import CardUIFront from "./Card/CardUIFront";
 import CardUIBack from "./Card/CardUIBack";
 import CardUIBottom from "./Card/CardUIBottom";
+import SortableChildTasks from "./SortableChildTasks";
 const TaskUnwrap = ({
   task,
   toggleChecked,
@@ -160,26 +161,24 @@ const TaskUnwrap = ({
         handleToggleList={handleToggleList}
         handleAdd={handleInsertBrotherTask}
       />
-      {!task.isClose &&
-        task.childTasks.map((child) => (
-          <Task
-            key={child.taskId}
-            task={child}
-            parentId={task.taskId}
-            centerPinTaskId={centerPinTaskId}
-            addChildTaskFront={addChildTaskFront}
-            addChildTaskEnd={addChildTaskEnd}
-            insertBrotherTask={insertBrotherTask}
-            deleteTask={deleteTask}
-            pinFlag={pinFlag}
-            toggleChecked={toggleChecked}
-            toggleClose={toggleClose}
-            switchSelect={switchSelect}
-            updateTaskName={updateTaskName}
-            revertLastChange={revertLastChange}
-            isEvenOrder={isEvenOrder}
-          />
-        ))}
+      {!task.isClose && (
+        <SortableChildTasks
+          taskList={task.childTasks}
+          parentId={task.taskId}
+          centerPinTaskId={centerPinTaskId}
+          addChildTaskFront={addChildTaskFront}
+          addChildTaskEnd={addChildTaskEnd}
+          insertBrotherTask={insertBrotherTask}
+          deleteTask={deleteTask}
+          pinFlag={pinFlag}
+          toggleChecked={toggleChecked}
+          toggleClose={toggleClose}
+          switchSelect={switchSelect}
+          updateTaskName={updateTaskName}
+          revertLastChange={revertLastChange}
+          isEvenOrder={isEvenOrder}
+        />
+      )}
     </div>
   );
 };
