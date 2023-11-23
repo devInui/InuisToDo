@@ -3,6 +3,8 @@ import Checkbox from "@mui/material/Checkbox";
 import AutoResizingInput from "./AutoResizingInput";
 
 const TaskCard = ({
+  attributes,
+  listeners,
   taskName,
   taskChecked,
   isIndeterminate,
@@ -18,6 +20,8 @@ const TaskCard = ({
 }) => {
   return (
     <div
+      {...attributes}
+      {...listeners}
       style={{
         margin: "5px",
         padding: "4px",

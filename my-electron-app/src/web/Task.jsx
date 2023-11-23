@@ -1,4 +1,6 @@
 import React, { memo, useCallback } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import TaskCard from "./Card/TaskCard";
 import CardUIFront from "./Card/CardUIFront";
 import CardUIBack from "./Card/CardUIBack";
@@ -23,6 +25,13 @@ const Task = memo(
     // not task property list
     //parentId, centerPinTaskId, isEvenOrder
   }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } =
+      useSortable({ id: task.taskId });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
     /*-----------Helper Function--------------*/
     const foundPinFlag = (task) => {
       if (task.taskId === centerPinTaskId) {
@@ -125,7 +134,9 @@ const Task = memo(
 
     return (
       <div
+        ref={setNodeRef}
         style={{
+          ...style,
           marginLeft: "90px",
         }}
       >
@@ -137,6 +148,8 @@ const Task = memo(
         >
           <CardUIFront isCenter={Boolean(isCenter)} handleFlag={handleFlag} />
           <TaskCard
+            attributes={attributes}
+            listeners={listeners}
             taskName={task.taskName}
             taskChecked={Boolean(task.checked)}
             isIndeterminate={Boolean(isIndeterminate)}
