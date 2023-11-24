@@ -16,6 +16,7 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { arrayMove } from "@dnd-kit/sortable";
 
 import Project from "./Project";
+import DraggingTask from "./DraggingTask";
 
 const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
   // Using the useProjectOperations hook to manage operations like adding, deleting, and updating projects
@@ -64,6 +65,27 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
       // use setProjects
     }
   };
+
+  const detectDragTask = (activeId) => {
+    const findTask = (taskList, projectId = null) => {
+      return taskList.reduce((acc, task) => {
+        const currentProjectId = projectId || task.taskId;
+        const result =
+          task.taskId === activeId
+            ? { task, currentProjectId }
+            : task.childTasks.length !== 0
+            ? findTask(task.childTasks, currentProjectId)
+            : false;
+        return acc !== false ? acc : result;
+      }, false);
+    };
+    return findTask(projects);
+  };
+  const { task: draggingTask, currentProjectId: draggingProjectId } =
+    detectDragTask(activeId);
+  const draggingProjectIndex = visibleProjects.findIndex(
+    (project) => project.taskId === draggingProjectId,
+  );
   // ---
 
   return (
@@ -88,6 +110,16 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
               deleteProject={deleteProject}
             />
           ))}
+          <DragOverlay>
+            {activeId ? (
+              <DraggingTask
+                task={draggingTask}
+                isEvenOrder={
+                  (visibleProjects.length - draggingProjectIndex) % 2 === 0
+                }
+              />
+            ) : null}
+          </DragOverlay>
         </DndContext>
       </div>
       <div style={{ height: "30vh" }}></div>
