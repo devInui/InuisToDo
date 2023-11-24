@@ -11,6 +11,10 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from "@dnd-kit/modifiers";
 import { arrayMove } from "@dnd-kit/sortable";
 
 import Project from "./Project";
@@ -90,6 +94,7 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
       </div>
       <div style={{ backgroundColor: "#60584e" }}>
         <DndContext
+          modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragStart={handleDragStart}
