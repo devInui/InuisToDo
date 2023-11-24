@@ -155,7 +155,6 @@ const Task = memo(
             isIndeterminate={Boolean(isIndeterminate)}
             childTasksLength={task.childTasks.length}
             isSelected={task.isSelected}
-            isFocus={task.isFocus}
             isEvenOrder={isEvenOrder}
             handleToggle={handleToggle}
             handleSelect={handleSelect}
