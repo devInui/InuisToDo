@@ -7,12 +7,10 @@ import {
   DndContext,
   DragOverlay,
   closestCenter,
-  KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { arrayMove } from "@dnd-kit/sortable";
 
 import Project from "./Project";
@@ -46,9 +44,6 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
         delay: 250,
         tolerance: 0,
       },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
 
