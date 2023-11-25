@@ -7,6 +7,7 @@ import {
   DndContext,
   DragOverlay,
   closestCenter,
+  closestCorners,
   PointerSensor,
   useSensor,
   useSensors,
@@ -147,12 +148,27 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
           ))}
           <DragOverlay>
             {activeId ? (
-              <DraggingTask
-                task={draggingTask}
-                isEvenOrder={
-                  (visibleProjects.length - draggingProjectIndex) % 2 === 0
-                }
-              />
+              <div style={{ width: "100%" }}>
+                <div
+                  style={{
+                    width: "min-content",
+                    height: "min-content",
+                    backgroundColor: "rgba(256, 256, 256, 0.1)",
+                    outline: "solid 3px #4484eb",
+                    borderRadius: "3px",
+                  }}
+                >
+                  <div style={{ opacity: 0.8 }}>
+                    <DraggingTask
+                      task={draggingTask}
+                      isEvenOrder={
+                        (visibleProjects.length - draggingProjectIndex) % 2 ===
+                        0
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
             ) : null}
           </DragOverlay>
         </DndContext>

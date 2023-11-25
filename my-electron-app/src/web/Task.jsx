@@ -137,7 +137,6 @@ const Task = memo(
         ref={setNodeRef}
         style={{
           ...style,
-          marginLeft: "90px",
         }}
       >
         <div

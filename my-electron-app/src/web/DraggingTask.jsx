@@ -7,16 +7,14 @@ const DraggingTask = ({ task, isEvenOrder }) => {
     !task.checked && task.childTasks.some((child) => child.checked);
 
   return (
-    <div
-      style={{
-        marginLeft: "90px",
-      }}
-    >
+    <>
       <div
         style={{
           display: "flex",
           alignItems: "center",
           paddingLeft: "35px",
+          paddingBottom: "35px",
+          paddingRight: "70px",
         }}
       >
         <TaskCard
@@ -28,7 +26,18 @@ const DraggingTask = ({ task, isEvenOrder }) => {
           isEvenOrder={isEvenOrder}
         />
       </div>
-    </div>
+      {!task.isClose && task.childTasks.length !== 0 ? (
+        <div style={{ marginLeft: "90px" }}>
+          {task.childTasks.map((child) => (
+            <DraggingTask
+              key={child.taskId}
+              task={child}
+              isEvenOrder={isEvenOrder}
+            />
+          ))}
+        </div>
+      ) : null}
+    </>
   );
 };
 export default memo(DraggingTask);
