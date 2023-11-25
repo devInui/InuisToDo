@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { useState, memo } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import useProjectListOperations from "./CustomHook/useProjectListOperations";
@@ -13,7 +13,7 @@ import {
 } from "@dnd-kit/core";
 import {
   restrictToVerticalAxis,
-  restrictToWindowEdges,
+  restrictToParentElement,
 } from "@dnd-kit/modifiers";
 import { arrayMove } from "@dnd-kit/sortable";
 
@@ -51,20 +51,55 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
     }),
   );
 
-  function handleDragStart(event) {
+  const handleDragStart = (event) => {
     setActiveId(event.active.id);
-  }
+  };
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
-
     setActiveId(null);
 
     if (over && active.id !== over.id) {
+      // helper function
+      const processor = (taskList) => {
+        const exitActiveTask = taskList.some(
+          (task) => task.taskId === active.id,
+        );
+        if (exitActiveTask) {
+          const oldIndex = taskList.findIndex(
+            (task) => task.taskId === active.id,
+          );
+          const newIndex = taskList.findIndex(
+            (task) => task.taskId === over.id,
+          );
+          return arrayMove(taskList, oldIndex, newIndex);
+        } else {
+          const newTaskList = taskList.map((task) => {
+            const newChildTasks = processor(task.childTasks);
+            if (newChildTasks) {
+              return { ...task, childTasks: newChildTasks };
+            } else {
+              return false;
+            }
+          });
+          return processedTaskList(taskList, newTaskList);
+        }
+      };
+      const processedTaskList = (oldTaskList, newTaskList) => {
+        if (newTaskList.some((task) => task)) {
+          return newTaskList.map((task, index) => task || oldTaskList[index]);
+        } else {
+          return false;
+        }
+      };
       // use setProjects
+      setProjects(
+        (previousProjects) => processor(previousProjects) || previousProjects,
+      );
     }
   };
-
+  // ---
+  // helper function for DragOverlay
   const detectDragTask = (activeId) => {
     const findTask = (taskList, projectId = null) => {
       return taskList.reduce((acc, task) => {
@@ -94,7 +129,7 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
       </div>
       <div style={{ backgroundColor: "#60584e" }}>
         <DndContext
-          modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragStart={handleDragStart}
@@ -127,4 +162,4 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
   );
 };
 
-export default ProjectTable;
+export default memo(ProjectTable);
