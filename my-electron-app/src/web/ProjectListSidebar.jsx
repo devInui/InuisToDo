@@ -39,9 +39,9 @@ const ProjectListSidebar = ({ projects, setProjects }) => {
   const { toggleProjectVisibility, deleteProject } =
     useProjectListOperations(setProjects);
 
-  function handleDragStart(event) {
+  const handleDragStart = (event) => {
     setActiveId(event.active.id);
-  }
+  };
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
