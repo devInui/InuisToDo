@@ -22,7 +22,7 @@ function SortableChildTasks({
   isEvenOrder,
 }) {
   return (
-    <div>
+    <div style={{ marginLeft: "90px" }}>
       <SortableContext
         items={taskList.map((task) => task.taskId)}
         strategy={verticalListSortingStrategy}
