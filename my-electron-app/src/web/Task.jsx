@@ -197,4 +197,4 @@ const Task = memo(
   },
 );
 
-export default Task;
+export default memo(Task);
