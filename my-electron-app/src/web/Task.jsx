@@ -31,7 +31,7 @@ const Task = memo(
       useSortable({ id: task.taskId });
 
     const style = {
-      transform: CSS.Transform.toString(transform),
+      transform: CSS.Translate.toString(transform),
       transition,
     };
     /*-----------Helper Function--------------*/
