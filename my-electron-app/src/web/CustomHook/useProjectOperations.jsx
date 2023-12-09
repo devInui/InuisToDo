@@ -150,6 +150,72 @@ const useProjectOperations = (projectId, setProject) => {
     [],
   );
   /*-------------------------*/
+  /*----------- handleDragEvents for DndContext in SortableChildTasks --------------*/
+  const moveTaskInList = useCallback((activeId, overId) => {
+    setEditedProject((previousProject) => {
+      const updateParent = (task) => {
+        if (task.childTasks.some((child) => child.taskId === activeId)) {
+          const oldIndex = task.childTasks.findIndex(
+            (task) => task.taskId === activeId,
+          );
+          const newIndex = task.childTasks.findIndex(
+            (task) => task.taskId === overId,
+          );
+          const newChildren = arrayMove(task.childTasks, oldIndex, newIndex);
+          //Update task
+          return { ...task, childTasks: newChildren };
+        } else if (task.childTasks) {
+          //Update childTask
+          const updatedChildTasks = task.childTasks.map(updateParent);
+          // Evaluating to avoid unnecessary reference changes
+          if (updatedChildTasks.some(Boolean)) {
+            return { ...task, childTasks: updatedChildTasks };
+          } else {
+            return false;
+          }
+        } else {
+          //Not found task
+          return false;
+        }
+      };
+      return updateParent(previousProject) || previousProject;
+    });
+  }, []);
+
+  // const moveTaskIToChild = (activeId, overId) => {
+  //   setEditedProject((previousProject) => {
+  //     const updateParent = (task) => {
+  //       if (task.childTasks.some((child) => child.taskId === activeId)) {
+  //         const activeTask = task.childTasks.find(
+  //           (child) => child.taskId === activeId,
+  //         );
+  //         let updateChild = task.childTasks.filter(
+  //           (child) => child.taskId !== activeId,
+  //         );
+  //         const newIndex = taskList.findIndex((task) => task.taskId === overId);
+  //         const newChildren = arrayMove(taskList, oldIndex, newIndex);
+  //         //Update task
+  //         return { ...task, childTasks: newChildren };
+  //       } else if (task.childTasks) {
+  //         //Update childTask
+  //         const updatedChildTasks = task.childTasks.map(updateParent);
+  //         // Evaluating to avoid unnecessary reference changes
+  //         if (updatedChildTasks.some(Boolean)) {
+  //           return { ...task, childTasks: updatedChildTasks };
+  //         } else {
+  //           return false;
+  //         }
+  //       } else {
+  //         //Not found task
+  //         return false;
+  //       }
+  //     };
+  //     return updateParent(previousProject) || previousProject;
+  //   });
+  // };
+
+  // const moveTaskToParent = (activeId) => {};
+  /*-------------------------*/
   /*-----------Control Task Property--------------*/
 
   // Toggles a task's pin status.
@@ -299,70 +365,6 @@ const useProjectOperations = (projectId, setProject) => {
       return updateTask(previousProject) || previousProject;
     });
   }, []);
-
-  // For handleDragEvents for DndContext in SortableChildTasks
-  const moveTaskInList = useCallback((activeId, overId) => {
-    setEditedProject((previousProject) => {
-      const updateParent = (task) => {
-        if (task.childTasks.some((child) => child.taskId === activeId)) {
-          const oldIndex = taskList.findIndex(
-            (task) => task.taskId === activeId,
-          );
-          const newIndex = taskList.findIndex((task) => task.taskId === overId);
-          const newChildren = arrayMove(taskList, oldIndex, newIndex);
-          //Update task
-          return { ...task, childTasks: newChildren };
-        } else if (task.childTasks) {
-          //Update childTask
-          const updatedChildTasks = task.childTasks.map(updateParent);
-          // Evaluating to avoid unnecessary reference changes
-          if (updatedChildTasks.some(Boolean)) {
-            return { ...task, childTasks: updatedChildTasks };
-          } else {
-            return false;
-          }
-        } else {
-          //Not found task
-          return false;
-        }
-      };
-      return updateParent(previousProject) || previousProject;
-    });
-  }, []);
-
-  // const moveTaskIToChild = (activeId, overId) => {
-  //   setEditedProject((previousProject) => {
-  //     const updateParent = (task) => {
-  //       if (task.childTasks.some((child) => child.taskId === activeId)) {
-  //         const activeTask = task.childTasks.find(
-  //           (child) => child.taskId === activeId,
-  //         );
-  //         let updateChild = task.childTasks.filter(
-  //           (child) => child.taskId !== activeId,
-  //         );
-  //         const newIndex = taskList.findIndex((task) => task.taskId === overId);
-  //         const newChildren = arrayMove(taskList, oldIndex, newIndex);
-  //         //Update task
-  //         return { ...task, childTasks: newChildren };
-  //       } else if (task.childTasks) {
-  //         //Update childTask
-  //         const updatedChildTasks = task.childTasks.map(updateParent);
-  //         // Evaluating to avoid unnecessary reference changes
-  //         if (updatedChildTasks.some(Boolean)) {
-  //           return { ...task, childTasks: updatedChildTasks };
-  //         } else {
-  //           return false;
-  //         }
-  //       } else {
-  //         //Not found task
-  //         return false;
-  //       }
-  //     };
-  //     return updateParent(previousProject) || previousProject;
-  //   });
-  // };
-
-  // const moveTaskToParent = (activeId) => {};
 
   // ---------- helper function ----------
   // for update checked state
