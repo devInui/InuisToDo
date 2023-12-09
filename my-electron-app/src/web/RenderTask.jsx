@@ -22,6 +22,7 @@ const RenderTask = ({
   moveTaskInList,
   revertLastChange,
   isEvenOrder,
+  setDebugInfo,
 }) => {
   /*-----------Helper Function--------------*/
   const foundPinFlag = (task) => {
@@ -180,6 +181,7 @@ const RenderTask = ({
           moveTaskInList={moveTaskInList}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
+          setDebugInfo={setDebugInfo}
         />
       )}
     </div>

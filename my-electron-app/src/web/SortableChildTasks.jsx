@@ -37,6 +37,7 @@ function SortableChildTasks({
   moveTaskInList,
   revertLastChange,
   isEvenOrder,
+  setDebugInfo,
 }) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -53,7 +54,7 @@ function SortableChildTasks({
   const handleDragEnd = (event) => {
     const { active, over } = event;
     setActiveId(null);
-    // setDebugInfo(null); // for debug code
+    setDebugInfo(null); // for debug code
     if (over && active.id !== over.id) {
       moveTaskInList(active.id, over.id);
     }
@@ -63,6 +64,10 @@ function SortableChildTasks({
   };
   const draggingTask = detectDragTask(activeId);
 
+  // for debug
+  const handleDragOver = (event) => {
+    setDebugInfo(event);
+  };
   return (
     <div style={{ marginLeft: "90px" }}>
       <DndContext
@@ -70,6 +75,7 @@ function SortableChildTasks({
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
         <SortableContext
@@ -94,6 +100,7 @@ function SortableChildTasks({
               moveTaskInList={moveTaskInList}
               revertLastChange={revertLastChange}
               isEvenOrder={isEvenOrder}
+              setDebugInfo={setDebugInfo}
             />
           ))}
         </SortableContext>

@@ -27,6 +27,21 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
 
   // for debug DnD
   const [debugInfo, setDebugInfo] = useState(null);
+  const detectDragTask = (activeId) => {
+    const findTask = (taskList, projectId = null) => {
+      return taskList.reduce((acc, task) => {
+        const currentProjectId = projectId || task.taskId;
+        const result =
+          task.taskId === activeId
+            ? { task, currentProjectId }
+            : task.childTasks.length !== 0
+            ? findTask(task.childTasks, currentProjectId)
+            : false;
+        return acc !== false ? acc : result;
+      }, false);
+    };
+    return findTask(projects);
+  };
   return (
     <>
       <div style={{ position: "fixed", top: "10px", right: "10px" }}>
@@ -41,6 +56,7 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
             revertLastChange={revertLastChange}
             setProject={setProject}
             deleteProject={deleteProject}
+            setDebugInfo={setDebugInfo}
           />
         ))}
         <div
