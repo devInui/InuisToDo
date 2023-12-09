@@ -59,6 +59,7 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
   const handleDragEnd = (event) => {
     const { active, over } = event;
     setActiveId(null);
+    setDebugInfo(null); // for debug code
 
     if (over && active.id !== over.id) {
       // helper function
@@ -122,7 +123,11 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
     (project) => project.taskId === draggingProjectId,
   );
   // ---
-
+  // for debug
+  const [debugInfo, setDebugInfo] = useState(null);
+  const handleDragOver = (event) => {
+    setDebugInfo(event);
+  };
   return (
     <>
       <div style={{ position: "fixed", top: "10px", right: "10px" }}>
@@ -134,6 +139,7 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
           {visibleProjects.map((project, index) => (
@@ -172,6 +178,30 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
             ) : null}
           </DragOverlay>
         </DndContext>
+        <div
+          style={{
+            position: "fixed",
+            marginLeft: "10px",
+            width: "100%",
+            bottom: "0px",
+            fontSize: "2vh",
+            minFontSize: "100px",
+            backgroundColor: "gray",
+            borderRadius: "3px",
+            zIndex: 100,
+          }}
+        >
+          <h1>Debug Window for DnD over event</h1>
+          <p>
+            ActiveTask:{" "}
+            {debugInfo?.active &&
+              detectDragTask(debugInfo.active.id).task.taskName}
+          </p>
+          <p>
+            OverTask:{" "}
+            {debugInfo?.over && detectDragTask(debugInfo.over.id).task.taskName}
+          </p>
+        </div>
       </div>
       <div style={{ height: "30vh" }}></div>
     </>
