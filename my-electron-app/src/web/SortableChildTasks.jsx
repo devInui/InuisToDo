@@ -50,50 +50,14 @@ function SortableChildTasks({
   const handleDragStart = (event) => {
     setActiveId(event.active.id);
   };
-  // const handleDragEnd = (event) => {
-  //   const { active, over } = event;
-  //   setActiveId(null);
-  //   setDebugInfo(null); // for debug code
-
-  //   if (over && active.id !== over.id) {
-  //     // helper function
-  //     const processor = (taskList) => {
-  //       const exitActiveTask = taskList.some(
-  //         (task) => task.taskId === active.id,
-  //       );
-  //       if (exitActiveTask) {
-  //         const oldIndex = taskList.findIndex(
-  //           (task) => task.taskId === active.id,
-  //         );
-  //         const newIndex = taskList.findIndex(
-  //           (task) => task.taskId === over.id,
-  //         );
-  //         return arrayMove(taskList, oldIndex, newIndex);
-  //       } else {
-  //         const newTaskList = taskList.map((task) => {
-  //           const newChildTasks = processor(task.childTasks);
-  //           if (newChildTasks) {
-  //             return { ...task, childTasks: newChildTasks };
-  //           } else {
-  //             return false;
-  //           }
-  //         });
-  //         return processedTaskList(taskList, newTaskList);
-  //       }
-  //     };
-  //     const processedTaskList = (oldTaskList, newTaskList) => {
-  //       if (newTaskList.some((task) => task)) {
-  //         return newTaskList.map((task, index) => task || oldTaskList[index]);
-  //       } else {
-  //         return false;
-  //       }
-  //     };
-  //     // use setProjects
-  //     setProjects(
-  //       (previousProjects) => processor(previousProjects) || previousProjects,
-  //     );
-  //   }
-  // };
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    setActiveId(null);
+    // setDebugInfo(null); // for debug code
+    if (over && active.id !== over.id) {
+      moveTaskInList(active.id, over.id);
+    }
+  };
   const detectDragTask = (activeId) => {
     return taskList.find((task) => task.taskId === activeId);
   };
@@ -106,6 +70,7 @@ function SortableChildTasks({
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
       >
         <SortableContext
           items={taskList.map((task) => task.taskId)}
