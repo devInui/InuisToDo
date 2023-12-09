@@ -447,6 +447,7 @@ const useProjectOperations = (projectId, setProject) => {
     updateTaskName,
     toggleClose,
     switchSelect,
+    moveTaskInList,
   };
 };
 

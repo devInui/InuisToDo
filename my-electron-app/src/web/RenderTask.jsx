@@ -19,6 +19,7 @@ const RenderTask = ({
   updateTaskName,
   toggleClose,
   switchSelect,
+  moveTaskInList,
   revertLastChange,
   isEvenOrder,
 }) => {
@@ -176,6 +177,7 @@ const RenderTask = ({
           updateTaskName={updateTaskName}
           toggleClose={toggleClose}
           switchSelect={switchSelect}
+          moveTaskInList={moveTaskInList}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
         />

@@ -34,6 +34,7 @@ function SortableChildTasks({
   toggleClose,
   switchSelect,
   updateTaskName,
+  moveTaskInList,
   revertLastChange,
   isEvenOrder,
 }) {
@@ -125,6 +126,7 @@ function SortableChildTasks({
               updateTaskName={updateTaskName}
               toggleClose={toggleClose}
               switchSelect={switchSelect}
+              moveTaskInList={moveTaskInList}
               revertLastChange={revertLastChange}
               isEvenOrder={isEvenOrder}
             />

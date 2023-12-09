@@ -19,6 +19,7 @@ const Project = ({
     updateTaskName,
     toggleClose,
     switchSelect,
+    moveTaskInList,
   } = useProjectOperations(project.taskId, setProject);
 
   /*----------TaskViewTest---------------*/
@@ -84,6 +85,7 @@ const Project = ({
           updateTaskName={updateTaskName}
           toggleClose={toggleClose}
           switchSelect={switchSelect}
+          moveTaskInList={moveTaskInList}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
         />
@@ -102,6 +104,7 @@ const Project = ({
           updateTaskName={updateTaskName}
           toggleClose={toggleClose}
           switchSelect={switchSelect}
+          moveTaskInList={moveTaskInList}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
         />

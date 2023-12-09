@@ -20,6 +20,7 @@ const Task = memo(
     updateTaskName,
     toggleClose,
     switchSelect,
+    moveTaskInList,
     revertLastChange,
     isEvenOrder,
     // not task property list
@@ -187,6 +188,7 @@ const Task = memo(
             updateTaskName={updateTaskName}
             toggleClose={toggleClose}
             switchSelect={switchSelect}
+            moveTaskInList={moveTaskInList}
             revertLastChange={revertLastChange}
             isEvenOrder={isEvenOrder}
           />
