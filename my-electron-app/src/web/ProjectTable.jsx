@@ -134,25 +134,25 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
         <AddProjectButton onClick={addProject} />
       </div>
       <div style={{ backgroundColor: "#60584e" }}>
-        <DndContext
+        {/* <DndContext
           modifiers={[restrictToVerticalAxis, restrictToParentElement]}
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
-        >
-          {visibleProjects.map((project, index) => (
-            <Project
-              isEvenOrder={(visibleProjects.length - index) % 2 === 0}
-              key={project.taskId}
-              project={project}
-              revertLastChange={revertLastChange}
-              setProject={setProject}
-              deleteProject={deleteProject}
-            />
-          ))}
-          <DragOverlay>
+        > */}
+        {visibleProjects.map((project, index) => (
+          <Project
+            isEvenOrder={(visibleProjects.length - index) % 2 === 0}
+            key={project.taskId}
+            project={project}
+            revertLastChange={revertLastChange}
+            setProject={setProject}
+            deleteProject={deleteProject}
+          />
+        ))}
+        {/* <DragOverlay>
             {activeId ? (
               <div style={{ width: "100%" }}>
                 <div
@@ -177,7 +177,7 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
               </div>
             ) : null}
           </DragOverlay>
-        </DndContext>
+        </DndContext> */}
         <div
           style={{
             position: "fixed",
