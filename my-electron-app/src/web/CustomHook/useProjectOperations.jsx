@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { arrayMove } from "@dnd-kit/sortable";
 
 // This custom hook provides operations for managing tasks within a project.
 // It optimizes task object updates to minimize unnecessary re-renders
@@ -169,7 +170,16 @@ const useProjectOperations = (projectId, setProject) => {
           const updatedChildTasks = task.childTasks.map(updateParent);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
-            return { ...task, childTasks: updatedChildTasks };
+            return {
+              ...task,
+              childTasks: task.childTasks.map((childTask, index) => {
+                if (updatedChildTasks[index]) {
+                  return updatedChildTasks[index];
+                } else {
+                  return childTask;
+                }
+              }),
+            };
           } else {
             return false;
           }
