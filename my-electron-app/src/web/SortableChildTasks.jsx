@@ -122,9 +122,9 @@ function SortableChildTasks({
               deleteTask={deleteTask}
               pinFlag={pinFlag}
               toggleChecked={toggleChecked}
+              updateTaskName={updateTaskName}
               toggleClose={toggleClose}
               switchSelect={switchSelect}
-              updateTaskName={updateTaskName}
               revertLastChange={revertLastChange}
               isEvenOrder={isEvenOrder}
             />

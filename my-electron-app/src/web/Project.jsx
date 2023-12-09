@@ -81,11 +81,11 @@ const Project = ({
           deleteTask={deleteTask}
           pinFlag={pinFlag}
           toggleChecked={toggleChecked}
+          updateTaskName={updateTaskName}
           toggleClose={toggleClose}
           switchSelect={switchSelect}
-          updateTaskName={updateTaskName}
-          isEvenOrder={isEvenOrder}
           revertLastChange={revertLastChange}
+          isEvenOrder={isEvenOrder}
         />
       ) : (
         <RenderTask
@@ -99,11 +99,11 @@ const Project = ({
           deleteTask={deleteTask}
           pinFlag={pinFlag}
           toggleChecked={toggleChecked}
+          updateTaskName={updateTaskName}
           toggleClose={toggleClose}
           switchSelect={switchSelect}
-          updateTaskName={updateTaskName}
-          isEvenOrder={isEvenOrder}
           revertLastChange={revertLastChange}
+          isEvenOrder={isEvenOrder}
         />
       )}
     </div>

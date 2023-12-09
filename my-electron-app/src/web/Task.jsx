@@ -9,17 +9,17 @@ import SortableChildTasks from "./SortableChildTasks";
 const Task = memo(
   ({
     task,
-    toggleChecked,
-    toggleClose,
-    switchSelect,
+    parentId,
+    centerPinTaskId,
     addChildTaskFront,
     addChildTaskEnd,
     insertBrotherTask,
     deleteTask,
-    updateTaskName,
     pinFlag,
-    parentId,
-    centerPinTaskId,
+    toggleChecked,
+    updateTaskName,
+    toggleClose,
+    switchSelect,
     revertLastChange,
     isEvenOrder,
     // not task property list
@@ -184,9 +184,9 @@ const Task = memo(
             deleteTask={deleteTask}
             pinFlag={pinFlag}
             toggleChecked={toggleChecked}
+            updateTaskName={updateTaskName}
             toggleClose={toggleClose}
             switchSelect={switchSelect}
-            updateTaskName={updateTaskName}
             revertLastChange={revertLastChange}
             isEvenOrder={isEvenOrder}
           />
