@@ -8,7 +8,8 @@ const Project = ({
   setProject,
   revertLastChange,
   isEvenOrder,
-  setDebugInfo,
+  setDebugOverInfo,
+  setDebugMoveInfo,
 }) => {
   const {
     addChildTaskFront,
@@ -89,7 +90,8 @@ const Project = ({
           moveTaskInList={moveTaskInList}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
-          setDebugInfo={setDebugInfo}
+          setDebugOverInfo={setDebugOverInfo}
+          setDebugMoveInfo={setDebugMoveInfo}
         />
       ) : (
         <RenderTask
@@ -109,7 +111,8 @@ const Project = ({
           moveTaskInList={moveTaskInList}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
-          setDebugInfo={setDebugInfo}
+          setDebugOverInfo={setDebugOverInfo}
+          setDebugMoveInfo={setDebugMoveInfo}
         />
       )}
     </div>

@@ -23,7 +23,8 @@ const Task = memo(
     moveTaskInList,
     revertLastChange,
     isEvenOrder,
-    setDebugInfo,
+    setDebugOverInfo,
+    setDebugMoveInfo,
     // not task property list
     //parentId, centerPinTaskId, isEvenOrder
   }) => {
@@ -192,7 +193,8 @@ const Task = memo(
             moveTaskInList={moveTaskInList}
             revertLastChange={revertLastChange}
             isEvenOrder={isEvenOrder}
-            setDebugInfo={setDebugInfo}
+            setDebugOverInfo={setDebugOverInfo}
+            setDebugMoveInfo={setDebugMoveInfo}
           />
         )}
       </div>

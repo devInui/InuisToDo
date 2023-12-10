@@ -26,8 +26,8 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
   const visibleProjects = projects.filter((project) => !project.isHidden);
 
   // for debug DnD
-  const [debugInfo, setDebugInfo] = useState(null);
-  const detectDragTask = (activeId) => {
+  const [debugOverInfo, setDebugOverInfo] = useState(null);
+  const [debugMoveInfo, setDebugMoveInfo] = useState(null);
     const findTask = (taskList, projectId = null) => {
       return taskList.reduce((acc, task) => {
         const currentProjectId = projectId || task.taskId;
@@ -56,7 +56,8 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
             revertLastChange={revertLastChange}
             setProject={setProject}
             deleteProject={deleteProject}
-            setDebugInfo={setDebugInfo}
+            setDebugOverInfo={setDebugOverInfo}
+            setDebugMoveInfo={setDebugMoveInfo}
           />
         ))}
         <div
@@ -75,13 +76,16 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
           <h1>Debug Window for DnD over event</h1>
           <p>
             ActiveTask:{" "}
-            {debugInfo?.active &&
-              detectDragTask(debugInfo.active.id).task.taskName}
+            {debugOverInfo?.active &&
+              detectDragTask(debugOverInfo.active.id).task.taskName}
           </p>
           <p>
             OverTask:{" "}
-            {debugInfo?.over && detectDragTask(debugInfo.over.id).task.taskName}
+            {debugOverInfo?.over &&
+              detectDragTask(debugOverInfo.over.id).task.taskName}
           </p>
+          <p>MoveX: {debugMoveInfo && debugMoveInfo.delta.x}</p>
+          <p>MoveY: {debugMoveInfo && debugMoveInfo.delta.y}</p>
         </div>
       </div>
       <div style={{ height: "30vh" }}></div>
