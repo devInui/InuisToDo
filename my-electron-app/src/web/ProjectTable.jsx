@@ -28,11 +28,12 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
   // for debug DnD
   const [debugOverInfo, setDebugOverInfo] = useState(null);
   const [debugMoveInfo, setDebugMoveInfo] = useState(null);
+  const detectDragTask = (targetId) => {
     const findTask = (taskList, projectId = null) => {
       return taskList.reduce((acc, task) => {
         const currentProjectId = projectId || task.taskId;
         const result =
-          task.taskId === activeId
+          task.taskId === targetId
             ? { task, currentProjectId }
             : task.childTasks.length !== 0
             ? findTask(task.childTasks, currentProjectId)
