@@ -37,7 +37,7 @@ const useProjectOperations = (projectId, setProject) => {
             return syncParentChildCheckStatus(task, newChildren);
           }
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateParent);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
@@ -63,7 +63,7 @@ const useProjectOperations = (projectId, setProject) => {
           const newChildren = [...task.childTasks, taskTemplate(childName)];
           return syncParentChildCheckStatus(task, newChildren);
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateParent);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
@@ -97,7 +97,7 @@ const useProjectOperations = (projectId, setProject) => {
           ];
           return syncParentChildCheckStatus(task, newChildren);
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateParent);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
@@ -126,7 +126,7 @@ const useProjectOperations = (projectId, setProject) => {
             //Update task
             return syncParentChildCheckStatus(task, newChildren);
           } else if (task.childTasks) {
-            //Update childTask
+            //Update childTasks
             const updatedChildTasks = task.childTasks.map(updateParent);
             // Evaluating to avoid unnecessary reference changes
             if (updatedChildTasks.some(Boolean)) {
@@ -166,7 +166,7 @@ const useProjectOperations = (projectId, setProject) => {
           //Update task
           return { ...task, childTasks: newChildren };
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateParent);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
@@ -245,7 +245,7 @@ const useProjectOperations = (projectId, setProject) => {
             //Update task
             return { ...task, checked: !task.checked };
           } else if (task.childTasks) {
-            //Update childTask
+            //Update childTasks
             const updatedChildTasks = task.childTasks.map(updateToggle);
             // Evaluating to avoid unnecessary reference changes
             if (updatedChildTasks.some(Boolean)) {
@@ -278,17 +278,17 @@ const useProjectOperations = (projectId, setProject) => {
           //Update task
           return { ...task, taskName: newTaskName };
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateName);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
             return {
               ...task,
-              childTasks: task.childTasks.map((childTask, index) => {
+              childTasks: task.childTasks.map((child, index) => {
                 if (updatedChildTasks[index]) {
                   return updatedChildTasks[index];
                 } else {
-                  return childTask;
+                  return child;
                 }
               }),
             };
@@ -313,17 +313,17 @@ const useProjectOperations = (projectId, setProject) => {
             //Update task
             return { ...task, isClose: !task.isClose };
           } else if (task.childTasks) {
-            //Update childTask
+            //Update childTasks
             const updatedChildTasks = task.childTasks.map(updateToggle);
             // Evaluating to avoid unnecessary reference changes
             if (updatedChildTasks.some(Boolean)) {
               return {
                 ...task,
-                childTasks: task.childTasks.map((childTask, index) => {
+                childTasks: task.childTasks.map((child, index) => {
                   if (updatedChildTasks[index]) {
                     return updatedChildTasks[index];
                   } else {
-                    return childTask;
+                    return child;
                   }
                 }),
               };
@@ -350,17 +350,17 @@ const useProjectOperations = (projectId, setProject) => {
           //Update task
           return { ...task, isSelected: !task.isSelected };
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateTask);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
             return {
               ...task,
-              childTasks: task.childTasks.map((childTask, index) => {
+              childTasks: task.childTasks.map((child, index) => {
                 if (updatedChildTasks[index]) {
                   return updatedChildTasks[index];
                 } else {
-                  return childTask;
+                  return child;
                 }
               }),
             };
