@@ -20,6 +20,7 @@ const RenderTask = ({
   toggleClose,
   switchSelect,
   moveTaskInList,
+  moveTaskInToChild,
   revertLastChange,
   isEvenOrder,
   setDebugOverInfo,
@@ -180,6 +181,7 @@ const RenderTask = ({
           toggleClose={toggleClose}
           switchSelect={switchSelect}
           moveTaskInList={moveTaskInList}
+          moveTaskInToChild={moveTaskInToChild}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
           setDebugOverInfo={setDebugOverInfo}

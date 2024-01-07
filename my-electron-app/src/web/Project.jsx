@@ -22,6 +22,7 @@ const Project = ({
     toggleClose,
     switchSelect,
     moveTaskInList,
+    moveTaskInToChild,
   } = useProjectOperations(project.taskId, setProject);
 
   /*----------TaskViewTest---------------*/
@@ -88,6 +89,7 @@ const Project = ({
           toggleClose={toggleClose}
           switchSelect={switchSelect}
           moveTaskInList={moveTaskInList}
+          moveTaskInToChild={moveTaskInToChild}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
           setDebugOverInfo={setDebugOverInfo}
@@ -109,6 +111,7 @@ const Project = ({
           toggleClose={toggleClose}
           switchSelect={switchSelect}
           moveTaskInList={moveTaskInList}
+          moveTaskInToChild={moveTaskInToChild}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
           setDebugOverInfo={setDebugOverInfo}
