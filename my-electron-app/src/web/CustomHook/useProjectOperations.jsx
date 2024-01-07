@@ -172,11 +172,11 @@ const useProjectOperations = (projectId, setProject) => {
           if (updatedChildTasks.some(Boolean)) {
             return {
               ...task,
-              childTasks: task.childTasks.map((childTask, index) => {
+              childTasks: task.childTasks.map((child, index) => {
                 if (updatedChildTasks[index]) {
                   return updatedChildTasks[index];
                 } else {
-                  return childTask;
+                  return child;
                 }
               }),
             };
@@ -379,11 +379,11 @@ const useProjectOperations = (projectId, setProject) => {
   // ---------- helper function ----------
   // for update checked state
   const updateTaskCheckStatus = (task, updatedChildTasks) => {
-    const newChildren = task.childTasks.map((childTask, index) => {
+    const newChildren = task.childTasks.map((child, index) => {
       if (updatedChildTasks[index]) {
         return updatedChildTasks[index];
       } else {
-        return childTask;
+        return child;
       }
     });
     return syncParentChildCheckStatus(task, newChildren);
