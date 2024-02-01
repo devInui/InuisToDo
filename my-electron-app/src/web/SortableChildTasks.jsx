@@ -36,6 +36,7 @@ function SortableChildTasks({
   updateTaskName,
   moveTaskInList,
   moveTaskInToChild,
+  moveTaskToParent,
   revertLastChange,
   isEvenOrder,
   setDebugOverInfo,
@@ -110,6 +111,7 @@ function SortableChildTasks({
               switchSelect={switchSelect}
               moveTaskInList={moveTaskInList}
               moveTaskInToChild={moveTaskInToChild}
+              moveTaskToParent={moveTaskToParent}
               revertLastChange={revertLastChange}
               isEvenOrder={isEvenOrder}
               setDebugOverInfo={setDebugOverInfo}

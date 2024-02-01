@@ -21,6 +21,7 @@ const RenderTask = ({
   switchSelect,
   moveTaskInList,
   moveTaskInToChild,
+  moveTaskToParent,
   revertLastChange,
   isEvenOrder,
   setDebugOverInfo,
@@ -182,6 +183,7 @@ const RenderTask = ({
           switchSelect={switchSelect}
           moveTaskInList={moveTaskInList}
           moveTaskInToChild={moveTaskInToChild}
+          moveTaskToParent={moveTaskToParent}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
           setDebugOverInfo={setDebugOverInfo}

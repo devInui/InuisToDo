@@ -23,6 +23,7 @@ const Project = ({
     switchSelect,
     moveTaskInList,
     moveTaskInToChild,
+    moveTaskToParent,
   } = useProjectOperations(project.taskId, setProject);
 
   /*----------TaskViewTest---------------*/
@@ -90,6 +91,7 @@ const Project = ({
           switchSelect={switchSelect}
           moveTaskInList={moveTaskInList}
           moveTaskInToChild={moveTaskInToChild}
+          moveTaskToParent={moveTaskToParent}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
           setDebugOverInfo={setDebugOverInfo}
@@ -112,6 +114,7 @@ const Project = ({
           switchSelect={switchSelect}
           moveTaskInList={moveTaskInList}
           moveTaskInToChild={moveTaskInToChild}
+          moveTaskToParent={moveTaskToParent}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
           setDebugOverInfo={setDebugOverInfo}

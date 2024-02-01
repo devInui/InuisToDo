@@ -22,6 +22,7 @@ const Task = memo(
     switchSelect,
     moveTaskInList,
     moveTaskInToChild,
+    moveTaskToParent,
     revertLastChange,
     isEvenOrder,
     setDebugOverInfo,
@@ -193,6 +194,7 @@ const Task = memo(
             switchSelect={switchSelect}
             moveTaskInList={moveTaskInList}
             moveTaskInToChild={moveTaskInToChild}
+            moveTaskToParent={moveTaskToParent}
             revertLastChange={revertLastChange}
             isEvenOrder={isEvenOrder}
             setDebugOverInfo={setDebugOverInfo}
