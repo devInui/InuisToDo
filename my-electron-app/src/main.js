@@ -6,6 +6,9 @@ import handleZoomChange from "./zoomHandler";
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
+    // frame: false,
+    titleBarStyle: "customButtonsOnHover",
+    autoHideMenuBar: true,
     webPreferences: {
       spellcheck: false,
       preload: path.resolve(__dirname, "preload.js"),
