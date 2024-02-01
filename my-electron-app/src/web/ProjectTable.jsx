@@ -61,7 +61,7 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
             setDebugMoveInfo={setDebugMoveInfo}
           />
         ))}
-        <div
+        {/* <div
           style={{
             position: "fixed",
             marginLeft: "10px",
@@ -87,7 +87,7 @@ const ProjectTable = ({ projects, setProjects, revertLastChange }) => {
           </p>
           <p>MoveX: {debugMoveInfo && debugMoveInfo.delta.x}</p>
           <p>MoveY: {debugMoveInfo && debugMoveInfo.delta.y}</p>
-        </div>
+        </div> */}
       </div>
       <div style={{ height: "30vh" }}></div>
     </>
