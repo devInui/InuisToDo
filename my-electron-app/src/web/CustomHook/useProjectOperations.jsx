@@ -262,6 +262,75 @@ const useProjectOperations = (projectId, setProject) => {
     });
   };
 
+  const moveTaskToParent = (activeId, parentId) => {
+    const findGranParentId = (parentId, sourceTask) => {
+      if (sourceTask.childTasks.some((child) => child.taskId === parentId)) {
+        const granParentId = sourceTask.taskId;
+        return granParentId;
+      } else if (sourceTask.childTasks) {
+        let granParentId = false;
+        for (const child of sourceTask.childTasks) {
+          const findId = findNewParentId(parentId, child);
+          if (findId !== false) {
+            newParentId = findId;
+            break;
+          }
+        }
+        return granParentId;
+      } else {
+        return false;
+      }
+    };
+
+    const appendSubTaskNext = (
+      granParentId,
+      parentId,
+      targetTask,
+      sourceTask,
+    ) => {
+      if (sourceTask.taskId === granParentId) {
+        const parentIndex = sourceTask.childTasks.findIndex(
+          ({ taskId }) => taskId === parentId,
+        );
+        const newChildTasks = [
+          ...sourceTask.childTasks.slice(0, parentIndex),
+          targetTask,
+          sourceTask.childTasks.slice(parentIndex),
+        ];
+        return syncParentChildCheckStatus(sourceTask, newChildTasks);
+      } else if (sourceTask.childTasks) {
+        //Update childTasks
+        const updatedChildTasks = sourceTask.childTasks.map((child) =>
+          appendSubTask(parentId, targetTask, child),
+        );
+        // Evaluating to avoid unnecessary reference changes
+        if (updatedChildTasks.some(Boolean)) {
+          return updateTaskCheckStatus(sourceTask, updatedChildTasks);
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    };
+    setEditedProject((previousProject) => {
+      const granParentId = findGranParentId(parentId, sourceTask);
+      if (!granParentId) {
+        return previousProject;
+      }
+      const detachResult = extractSubTask(activeId, previousProject);
+      if (!detachResult) {
+        return previousProject;
+      }
+      const activeTask = detachResult.subTask;
+      const restProject = detachResult.restSourceTask;
+      return (
+        appendSubTaskNext(granParentId, parentId, activeTask, restProject) ||
+        previousProject
+      );
+    });
+  };
+
   /*-------------------------*/
   /*-----------helper function for Drag and Drop--------------*/
   const extractSubTask = (targetId, sourceTask) => {
@@ -533,6 +602,7 @@ const useProjectOperations = (projectId, setProject) => {
     switchSelect,
     moveTaskInList,
     moveTaskInToChild,
+    moveTaskToParent,
   };
 };
 
