@@ -61,6 +61,8 @@ function SortableChildTasks({
     setDebugMoveInfo(null); // for debug code
     if (event.delta.x > 90) {
       moveTaskInToChild(active.id, over.id);
+    } else if (event.delta.x < -90) {
+      moveTaskToParent(active.id, parentId);
     } else if (over && active.id !== over.id) {
       moveTaskInList(active.id, over.id);
     }

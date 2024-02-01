@@ -255,7 +255,6 @@ const useProjectOperations = (projectId, setProject) => {
       }
       const activeTask = detachResult.subTask;
       const restProject = detachResult.restSourceTask;
-      console.log(newParentId);
       return (
         appendSubTask(newParentId, activeTask, restProject) || previousProject
       );
@@ -270,9 +269,9 @@ const useProjectOperations = (projectId, setProject) => {
       } else if (sourceTask.childTasks) {
         let granParentId = false;
         for (const child of sourceTask.childTasks) {
-          const findId = findNewParentId(parentId, child);
+          const findId = findGranParentId(parentId, child);
           if (findId !== false) {
-            newParentId = findId;
+            granParentId = findId;
             break;
           }
         }
@@ -290,18 +289,18 @@ const useProjectOperations = (projectId, setProject) => {
     ) => {
       if (sourceTask.taskId === granParentId) {
         const parentIndex = sourceTask.childTasks.findIndex(
-          ({ taskId }) => taskId === parentId,
+          (child) => child.taskId === parentId,
         );
         const newChildTasks = [
-          ...sourceTask.childTasks.slice(0, parentIndex),
+          ...sourceTask.childTasks.slice(0, parentIndex + 1),
           targetTask,
-          sourceTask.childTasks.slice(parentIndex),
+          ...sourceTask.childTasks.slice(parentIndex + 1),
         ];
         return syncParentChildCheckStatus(sourceTask, newChildTasks);
       } else if (sourceTask.childTasks) {
         //Update childTasks
         const updatedChildTasks = sourceTask.childTasks.map((child) =>
-          appendSubTask(parentId, targetTask, child),
+          appendSubTaskNext(granParentId, parentId, targetTask, child),
         );
         // Evaluating to avoid unnecessary reference changes
         if (updatedChildTasks.some(Boolean)) {
@@ -314,7 +313,7 @@ const useProjectOperations = (projectId, setProject) => {
       }
     };
     setEditedProject((previousProject) => {
-      const granParentId = findGranParentId(parentId, sourceTask);
+      const granParentId = findGranParentId(parentId, previousProject);
       if (!granParentId) {
         return previousProject;
       }
