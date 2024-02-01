@@ -15,7 +15,8 @@
     "dev:react-devtools": "react-devtools",
     "build": "rimraf dist && cross-env NODE_ENV=\"production\" webpack --progress",
     "dev:webpack": "cross-env NODE_ENV=\"development\" webpack --progress",
-    "dev:electron": "wait-on dist/main.js dist/index.html && electronmon ."
+    "dev:electron": "wait-on dist/main.js dist/index.html && electronmon .",
+    "release": "rimraf release && ts-node ./builder.ts"
   },
   "electronmon": {
     "patterns": [
@@ -44,6 +45,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.8.1",
     "electron": "^25.3.0",
+    "electron-builder": "^24.9.1",
     "electronmon": "^2.0.2",
     "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "^2.7.6",
@@ -52,6 +54,7 @@
     "react-devtools": "^4.28.0",
     "rimraf": "^5.0.1",
     "tailwindcss": "^3.3.3",
+    "ts-node": "^10.9.2",
     "wait-on": "^7.0.1",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4"

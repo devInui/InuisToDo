@@ -16,11 +16,16 @@ const RenderTask = ({
   deleteTask,
   pinFlag,
   toggleChecked,
+  updateTaskName,
   toggleClose,
   switchSelect,
-  updateTaskName,
+  moveTaskInList,
+  moveTaskInToChild,
+  moveTaskToParent,
   revertLastChange,
   isEvenOrder,
+  setDebugOverInfo,
+  setDebugMoveInfo,
 }) => {
   /*-----------Helper Function--------------*/
   const foundPinFlag = (task) => {
@@ -173,11 +178,16 @@ const RenderTask = ({
           deleteTask={deleteTask}
           pinFlag={pinFlag}
           toggleChecked={toggleChecked}
+          updateTaskName={updateTaskName}
           toggleClose={toggleClose}
           switchSelect={switchSelect}
-          updateTaskName={updateTaskName}
+          moveTaskInList={moveTaskInList}
+          moveTaskInToChild={moveTaskInToChild}
+          moveTaskToParent={moveTaskToParent}
           revertLastChange={revertLastChange}
           isEvenOrder={isEvenOrder}
+          setDebugOverInfo={setDebugOverInfo}
+          setDebugMoveInfo={setDebugMoveInfo}
         />
       )}
     </div>

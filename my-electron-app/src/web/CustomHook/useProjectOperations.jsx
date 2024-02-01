@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { arrayMove } from "@dnd-kit/sortable";
 
 // This custom hook provides operations for managing tasks within a project.
 // It optimizes task object updates to minimize unnecessary re-renders
@@ -36,7 +37,7 @@ const useProjectOperations = (projectId, setProject) => {
             return syncParentChildCheckStatus(task, newChildren);
           }
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateParent);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
@@ -62,7 +63,7 @@ const useProjectOperations = (projectId, setProject) => {
           const newChildren = [...task.childTasks, taskTemplate(childName)];
           return syncParentChildCheckStatus(task, newChildren);
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateParent);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
@@ -96,7 +97,7 @@ const useProjectOperations = (projectId, setProject) => {
           ];
           return syncParentChildCheckStatus(task, newChildren);
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateParent);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
@@ -125,7 +126,7 @@ const useProjectOperations = (projectId, setProject) => {
             //Update task
             return syncParentChildCheckStatus(task, newChildren);
           } else if (task.childTasks) {
-            //Update childTask
+            //Update childTasks
             const updatedChildTasks = task.childTasks.map(updateParent);
             // Evaluating to avoid unnecessary reference changes
             if (updatedChildTasks.some(Boolean)) {
@@ -150,6 +151,221 @@ const useProjectOperations = (projectId, setProject) => {
     [],
   );
   /*-------------------------*/
+  /*----------- handleDragEvents for DndContext in SortableChildTasks --------------*/
+  const moveTaskInList = useCallback((activeId, overId) => {
+    setEditedProject((previousProject) => {
+      const updateParent = (task) => {
+        if (task.childTasks.some((child) => child.taskId === activeId)) {
+          const oldIndex = task.childTasks.findIndex(
+            (task) => task.taskId === activeId,
+          );
+          const newIndex = task.childTasks.findIndex(
+            (task) => task.taskId === overId,
+          );
+          const newChildren = arrayMove(task.childTasks, oldIndex, newIndex);
+          //Update task
+          return { ...task, childTasks: newChildren };
+        } else if (task.childTasks) {
+          //Update childTasks
+          const updatedChildTasks = task.childTasks.map(updateParent);
+          // Evaluating to avoid unnecessary reference changes
+          if (updatedChildTasks.some(Boolean)) {
+            return {
+              ...task,
+              childTasks: task.childTasks.map((child, index) => {
+                if (updatedChildTasks[index]) {
+                  return updatedChildTasks[index];
+                } else {
+                  return child;
+                }
+              }),
+            };
+          } else {
+            return false;
+          }
+        } else {
+          //Not found task
+          return false;
+        }
+      };
+      return updateParent(previousProject) || previousProject;
+    });
+  }, []);
+
+  const moveTaskInToChild = (activeId, overId) => {
+    const findNewParentId = (activeId, overId, sourceTask) => {
+      if (sourceTask.childTasks.some((child) => child.taskId === activeId)) {
+        if (!overId) return false;
+        const activeIndex = sourceTask.childTasks.findIndex(
+          (task) => task.taskId === activeId,
+        );
+        const overIndex = sourceTask.childTasks.findIndex(
+          (task) => task.taskId === overId,
+        );
+        const parentIndex = overIndex < activeIndex ? overIndex : overIndex - 1;
+        if (parentIndex < 0) return false;
+        const parentId =
+          parentIndex >= 0 ? sourceTask.childTasks[parentIndex].taskId : false;
+        return parentId;
+      } else if (sourceTask.childTasks) {
+        let parentId = false;
+        for (const child of sourceTask.childTasks) {
+          const newParentId = findNewParentId(activeId, overId, child);
+          if (newParentId !== false) {
+            parentId = newParentId;
+            break;
+          }
+        }
+        return parentId;
+      } else {
+        return false;
+      }
+    };
+
+    const appendSubTask = (parentId, targetTask, sourceTask) => {
+      if (sourceTask.taskId === parentId) {
+        const newChildTasks = [...sourceTask.childTasks, targetTask];
+        return syncParentChildCheckStatus(
+          { ...sourceTask, isClose: false },
+          newChildTasks,
+        );
+      } else if (sourceTask.childTasks) {
+        //Update childTasks
+        const updatedChildTasks = sourceTask.childTasks.map((child) =>
+          appendSubTask(parentId, targetTask, child),
+        );
+        // Evaluating to avoid unnecessary reference changes
+        if (updatedChildTasks.some(Boolean)) {
+          return updateTaskCheckStatus(sourceTask, updatedChildTasks);
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    };
+    setEditedProject((previousProject) => {
+      const newParentId = findNewParentId(activeId, overId, previousProject);
+      if (!newParentId) {
+        return previousProject;
+      }
+      const detachResult = extractSubTask(activeId, previousProject);
+      if (!detachResult) {
+        return previousProject;
+      }
+      const activeTask = detachResult.subTask;
+      const restProject = detachResult.restSourceTask;
+      return (
+        appendSubTask(newParentId, activeTask, restProject) || previousProject
+      );
+    });
+  };
+
+  const moveTaskToParent = (activeId, parentId) => {
+    const findGranParentId = (parentId, sourceTask) => {
+      if (sourceTask.childTasks.some((child) => child.taskId === parentId)) {
+        const granParentId = sourceTask.taskId;
+        return granParentId;
+      } else if (sourceTask.childTasks) {
+        let granParentId = false;
+        for (const child of sourceTask.childTasks) {
+          const findId = findGranParentId(parentId, child);
+          if (findId !== false) {
+            granParentId = findId;
+            break;
+          }
+        }
+        return granParentId;
+      } else {
+        return false;
+      }
+    };
+
+    const appendSubTaskNext = (
+      granParentId,
+      parentId,
+      targetTask,
+      sourceTask,
+    ) => {
+      if (sourceTask.taskId === granParentId) {
+        const parentIndex = sourceTask.childTasks.findIndex(
+          (child) => child.taskId === parentId,
+        );
+        const newChildTasks = [
+          ...sourceTask.childTasks.slice(0, parentIndex + 1),
+          targetTask,
+          ...sourceTask.childTasks.slice(parentIndex + 1),
+        ];
+        return syncParentChildCheckStatus(sourceTask, newChildTasks);
+      } else if (sourceTask.childTasks) {
+        //Update childTasks
+        const updatedChildTasks = sourceTask.childTasks.map((child) =>
+          appendSubTaskNext(granParentId, parentId, targetTask, child),
+        );
+        // Evaluating to avoid unnecessary reference changes
+        if (updatedChildTasks.some(Boolean)) {
+          return updateTaskCheckStatus(sourceTask, updatedChildTasks);
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    };
+    setEditedProject((previousProject) => {
+      const granParentId = findGranParentId(parentId, previousProject);
+      if (!granParentId) {
+        return previousProject;
+      }
+      const detachResult = extractSubTask(activeId, previousProject);
+      if (!detachResult) {
+        return previousProject;
+      }
+      const activeTask = detachResult.subTask;
+      const restProject = detachResult.restSourceTask;
+      return (
+        appendSubTaskNext(granParentId, parentId, activeTask, restProject) ||
+        previousProject
+      );
+    });
+  };
+
+  /*-------------------------*/
+  /*-----------helper function for Drag and Drop--------------*/
+  const extractSubTask = (targetId, sourceTask) => {
+    if (sourceTask.childTasks.some((child) => child.taskId === targetId)) {
+      const targetTask = sourceTask.childTasks.find(
+        (task) => task.taskId === targetId,
+      );
+      const newChildTasks = sourceTask.childTasks.filter(
+        (child) => child.taskId !== targetId,
+      );
+      return {
+        subTask: targetTask,
+        restSourceTask: syncParentChildCheckStatus(sourceTask, newChildTasks),
+      };
+    } else if (sourceTask.childTasks) {
+      //Update childTasks
+      const results = sourceTask.childTasks.map((child) =>
+        extractSubTask(targetId, child),
+      );
+      if (results.some(Boolean)) {
+        const targetTask = results.find(Boolean).subTask;
+        const updatedChildTasks = results.map(
+          (child) => child && child.restSourceTask,
+        );
+        return {
+          subTask: targetTask,
+          restSourceTask: updateTaskCheckStatus(sourceTask, updatedChildTasks),
+        };
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
+  /*-------------------------*/
   /*-----------Control Task Property--------------*/
 
   // Toggles a task's pin status.
@@ -169,7 +385,7 @@ const useProjectOperations = (projectId, setProject) => {
             //Update task
             return { ...task, checked: !task.checked };
           } else if (task.childTasks) {
-            //Update childTask
+            //Update childTasks
             const updatedChildTasks = task.childTasks.map(updateToggle);
             // Evaluating to avoid unnecessary reference changes
             if (updatedChildTasks.some(Boolean)) {
@@ -202,17 +418,17 @@ const useProjectOperations = (projectId, setProject) => {
           //Update task
           return { ...task, taskName: newTaskName };
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateName);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
             return {
               ...task,
-              childTasks: task.childTasks.map((childTask, index) => {
+              childTasks: task.childTasks.map((child, index) => {
                 if (updatedChildTasks[index]) {
                   return updatedChildTasks[index];
                 } else {
-                  return childTask;
+                  return child;
                 }
               }),
             };
@@ -237,17 +453,17 @@ const useProjectOperations = (projectId, setProject) => {
             //Update task
             return { ...task, isClose: !task.isClose };
           } else if (task.childTasks) {
-            //Update childTask
+            //Update childTasks
             const updatedChildTasks = task.childTasks.map(updateToggle);
             // Evaluating to avoid unnecessary reference changes
             if (updatedChildTasks.some(Boolean)) {
               return {
                 ...task,
-                childTasks: task.childTasks.map((childTask, index) => {
+                childTasks: task.childTasks.map((child, index) => {
                   if (updatedChildTasks[index]) {
                     return updatedChildTasks[index];
                   } else {
-                    return childTask;
+                    return child;
                   }
                 }),
               };
@@ -274,17 +490,17 @@ const useProjectOperations = (projectId, setProject) => {
           //Update task
           return { ...task, isSelected: !task.isSelected };
         } else if (task.childTasks) {
-          //Update childTask
+          //Update childTasks
           const updatedChildTasks = task.childTasks.map(updateTask);
           // Evaluating to avoid unnecessary reference changes
           if (updatedChildTasks.some(Boolean)) {
             return {
               ...task,
-              childTasks: task.childTasks.map((childTask, index) => {
+              childTasks: task.childTasks.map((child, index) => {
                 if (updatedChildTasks[index]) {
                   return updatedChildTasks[index];
                 } else {
-                  return childTask;
+                  return child;
                 }
               }),
             };
@@ -303,11 +519,11 @@ const useProjectOperations = (projectId, setProject) => {
   // ---------- helper function ----------
   // for update checked state
   const updateTaskCheckStatus = (task, updatedChildTasks) => {
-    const newChildren = task.childTasks.map((childTask, index) => {
+    const newChildren = task.childTasks.map((child, index) => {
       if (updatedChildTasks[index]) {
         return updatedChildTasks[index];
       } else {
-        return childTask;
+        return child;
       }
     });
     return syncParentChildCheckStatus(task, newChildren);
@@ -383,6 +599,9 @@ const useProjectOperations = (projectId, setProject) => {
     updateTaskName,
     toggleClose,
     switchSelect,
+    moveTaskInList,
+    moveTaskInToChild,
+    moveTaskToParent,
   };
 };
 

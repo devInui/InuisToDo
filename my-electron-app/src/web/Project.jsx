@@ -8,6 +8,8 @@ const Project = ({
   setProject,
   revertLastChange,
   isEvenOrder,
+  setDebugOverInfo,
+  setDebugMoveInfo,
 }) => {
   const {
     addChildTaskFront,
@@ -19,6 +21,9 @@ const Project = ({
     updateTaskName,
     toggleClose,
     switchSelect,
+    moveTaskInList,
+    moveTaskInToChild,
+    moveTaskToParent,
   } = useProjectOperations(project.taskId, setProject);
 
   /*----------TaskViewTest---------------*/
@@ -81,11 +86,16 @@ const Project = ({
           deleteTask={deleteTask}
           pinFlag={pinFlag}
           toggleChecked={toggleChecked}
+          updateTaskName={updateTaskName}
           toggleClose={toggleClose}
           switchSelect={switchSelect}
-          updateTaskName={updateTaskName}
-          isEvenOrder={isEvenOrder}
+          moveTaskInList={moveTaskInList}
+          moveTaskInToChild={moveTaskInToChild}
+          moveTaskToParent={moveTaskToParent}
           revertLastChange={revertLastChange}
+          isEvenOrder={isEvenOrder}
+          setDebugOverInfo={setDebugOverInfo}
+          setDebugMoveInfo={setDebugMoveInfo}
         />
       ) : (
         <RenderTask
@@ -99,11 +109,16 @@ const Project = ({
           deleteTask={deleteTask}
           pinFlag={pinFlag}
           toggleChecked={toggleChecked}
+          updateTaskName={updateTaskName}
           toggleClose={toggleClose}
           switchSelect={switchSelect}
-          updateTaskName={updateTaskName}
-          isEvenOrder={isEvenOrder}
+          moveTaskInList={moveTaskInList}
+          moveTaskInToChild={moveTaskInToChild}
+          moveTaskToParent={moveTaskToParent}
           revertLastChange={revertLastChange}
+          isEvenOrder={isEvenOrder}
+          setDebugOverInfo={setDebugOverInfo}
+          setDebugMoveInfo={setDebugMoveInfo}
         />
       )}
     </div>

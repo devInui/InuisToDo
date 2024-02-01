@@ -9,19 +9,24 @@ import SortableChildTasks from "./SortableChildTasks";
 const Task = memo(
   ({
     task,
-    toggleChecked,
-    toggleClose,
-    switchSelect,
+    parentId,
+    centerPinTaskId,
     addChildTaskFront,
     addChildTaskEnd,
     insertBrotherTask,
     deleteTask,
-    updateTaskName,
     pinFlag,
-    parentId,
-    centerPinTaskId,
+    toggleChecked,
+    updateTaskName,
+    toggleClose,
+    switchSelect,
+    moveTaskInList,
+    moveTaskInToChild,
+    moveTaskToParent,
     revertLastChange,
     isEvenOrder,
+    setDebugOverInfo,
+    setDebugMoveInfo,
     // not task property list
     //parentId, centerPinTaskId, isEvenOrder
   }) => {
@@ -29,7 +34,7 @@ const Task = memo(
       useSortable({ id: task.taskId });
 
     const style = {
-      transform: CSS.Transform.toString(transform),
+      transform: CSS.Translate.toString(transform),
       transition,
     };
     /*-----------Helper Function--------------*/
@@ -184,11 +189,16 @@ const Task = memo(
             deleteTask={deleteTask}
             pinFlag={pinFlag}
             toggleChecked={toggleChecked}
+            updateTaskName={updateTaskName}
             toggleClose={toggleClose}
             switchSelect={switchSelect}
-            updateTaskName={updateTaskName}
+            moveTaskInList={moveTaskInList}
+            moveTaskInToChild={moveTaskInToChild}
+            moveTaskToParent={moveTaskToParent}
             revertLastChange={revertLastChange}
             isEvenOrder={isEvenOrder}
+            setDebugOverInfo={setDebugOverInfo}
+            setDebugMoveInfo={setDebugMoveInfo}
           />
         )}
       </div>

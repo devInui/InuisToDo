@@ -3,7 +3,7 @@ import { Menu } from "electron";
 function setMenu(mainWindow) {
   // メニューのテンプレート配列を作成
   const template = [
-    { role: "fileMenu" },
+    // { role: "fileMenu" },
     {
       role: "editMenu",
       submenu: [
@@ -30,9 +30,9 @@ function setMenu(mainWindow) {
         { role: "selectall" },
       ],
     },
-    { role: "viewMenu" },
+    // { role: "viewMenu" },
     { role: "windowMenu" },
-    { role: "help" },
+    // { role: "help" },
   ];
 
   // macOS では "アプリメニュー" が必要
