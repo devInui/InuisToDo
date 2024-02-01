@@ -10,6 +10,8 @@ import {
   DragOverlay,
   closestCenter,
   closestCorners,
+  rectangleIntersection,
+  verticalSortableListCollisionDetection,
   PointerSensor,
   useSensor,
   useSensors,
@@ -78,15 +80,20 @@ function SortableChildTasks({
   };
   const handleDragMove = (event) => {
     setDebugMoveInfo(event);
-    if (event.delta.x < -100) console.log("fire MoveToParentEvent");
-    if (event.delta.x < -100) console.log("fire MoveToChildEvent");
+    // if (event.delta.x < -100) console.log("fire MoveToParentEvent");
+    // if (event.delta.x > 100)
+    //   console.log("fire MoveToChildEvent", event.active.id, event.over.id);
   };
   return (
     <div style={{ marginLeft: "90px" }}>
       <DndContext
         // modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+        // modifiers={[restrictToVerticalAxis]}
         sensors={sensors}
-        collisionDetection={closestCenter}
+        // collisionDetection={closestCenter}
+        // collisionDetection={rectangleIntersection}
+        // collisionDetection={closestCorners}
+        collisionDetection={verticalSortableListCollisionDetection}
         onDragStart={handleDragStart}
         onDragMove={handleDragMove}
         onDragOver={handleDragOver}
