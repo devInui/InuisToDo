@@ -35,6 +35,7 @@ function SortableChildTasks({
   switchSelect,
   updateTaskName,
   moveTaskInList,
+  moveTaskInToChild,
   revertLastChange,
   isEvenOrder,
   setDebugOverInfo,
@@ -57,7 +58,9 @@ function SortableChildTasks({
     setActiveId(null);
     setDebugOverInfo(null); // for debug code
     setDebugMoveInfo(null); // for debug code
-    if (over && active.id !== over.id) {
+    if (event.delta.x > 90) {
+      moveTaskInToChild(active.id, over.id);
+    } else if (over && active.id !== over.id) {
       moveTaskInList(active.id, over.id);
     }
   };
@@ -106,6 +109,7 @@ function SortableChildTasks({
               toggleClose={toggleClose}
               switchSelect={switchSelect}
               moveTaskInList={moveTaskInList}
+              moveTaskInToChild={moveTaskInToChild}
               revertLastChange={revertLastChange}
               isEvenOrder={isEvenOrder}
               setDebugOverInfo={setDebugOverInfo}

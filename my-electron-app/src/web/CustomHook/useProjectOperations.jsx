@@ -193,108 +193,110 @@ const useProjectOperations = (projectId, setProject) => {
   }, []);
 
   const moveTaskInToChild = (activeId, overId) => {
+    const findNewParentId = (activeId, overId, sourceTask) => {
+      if (sourceTask.childTasks.some((child) => child.taskId === activeId)) {
+        if (!overId) return false;
+        const activeIndex = sourceTask.childTasks.findIndex(
+          (task) => task.taskId === activeId,
+        );
+        const overIndex = sourceTask.childTasks.findIndex(
+          (task) => task.taskId === overId,
+        );
+        const parentIndex = overIndex < activeIndex ? overIndex : overIndex - 1;
+        if (parentIndex < 0) return false;
+        const parentId =
+          parentIndex >= 0 ? sourceTask.childTasks[parentIndex].taskId : false;
+        return parentId;
+      } else if (sourceTask.childTasks) {
+        let parentId = false;
+        for (const child of sourceTask.childTasks) {
+          const newParentId = findNewParentId(activeId, overId, child);
+          if (newParentId !== false) {
+            parentId = newParentId;
+            break;
+          }
+        }
+        return parentId;
+      } else {
+        return false;
+      }
+    };
+
+    const appendSubTask = (parentId, targetTask, sourceTask) => {
+      if (sourceTask.taskId === parentId) {
+        const newChildTasks = [...sourceTask.childTasks, targetTask];
+        return syncParentChildCheckStatus(
+          { ...sourceTask, isClose: false },
+          newChildTasks,
+        );
+      } else if (sourceTask.childTasks) {
+        //Update childTasks
+        const updatedChildTasks = sourceTask.childTasks.map((child) =>
+          appendSubTask(parentId, targetTask, child),
+        );
+        // Evaluating to avoid unnecessary reference changes
+        if (updatedChildTasks.some(Boolean)) {
+          return updateTaskCheckStatus(sourceTask, updatedChildTasks);
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    };
     setEditedProject((previousProject) => {
-      const findNewParentId = (activeId, overId, sourceTask) => {
-        if (sourceTask.childTasks.some((child) => child.taskId === activeId)) {
-          const activeIndex = sourceTask.childTasks.findIndex(
-            (task) => task.taskId === activeId,
-          );
-          const overIndex = sourceTask.childTasks.findIndex(
-            (task) => task.taskId === overId,
-          );
-          if (overId) return false;
-          const parentIndex =
-            overIndex < activeIndex ? overIndex : overIndex - 1;
-          if (parentIndex < 0) return false;
-          const parentId =
-            parentIndex >= 0
-              ? sourceTask.childTasks[parentIndex].taskId
-              : false;
-          return parentId;
-        } else if (sourceTask.childTasks) {
-          let parentId = false;
-          for (const child of sourceTask.childTasks) {
-            const newParentId = findNewParentId(activeId, overId, child);
-            if (newParentId !== false) {
-              parentId = newParentId;
-              break;
-            }
-          }
-          return parentId;
-        } else {
-          return false;
-        }
-      };
-      const extractSubTask = (targetId, sourceTask) => {
-        if (sourceTask.childTasks.some((child) => child.taskId === targetId)) {
-          const targetTask = task.childTasks.find(
-            (task) => task.taskId === targetId,
-          );
-          const newChildTasks = sourceTask.childTasks.filter(
-            (child) => child.taskId !== targetId,
-          );
-          return {
-            subTask: targetTask,
-            restSourceTask: syncParentChildCheckStatus(
-              sourceTask,
-              newChildTasks,
-            ),
-          };
-        } else if (sourceTask.childTasks) {
-          //Update childTasks
-          const results = task.childTasks.map((child) =>
-            extractSubTask(targetId, child),
-          );
-          if (results.some(Boolean)) {
-            const targetTask = results.find(Boolean).subTask;
-            const updatedChildTasks = results.map(
-              (child) => child && child.restSourceTask,
-            );
-            return {
-              subTask: targetTask,
-              restSourceTask: updateTaskCheckStatus(task, updatedChildTasks),
-            };
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      };
-
-      const appendSubTask = (parentId, targetTask, sourceTask) => {
-        if (sourceTask.taskId === parentId) {
-          const newChildTasks = [...sourceTask.childTasks, targetTask];
-          return syncParentChildCheckStatus(sourceTask, newChildTasks);
-        } else if (sourceTask.childTasks) {
-          //Update childTasks
-          const updatedChildTasks = task.childTasks.map((child) =>
-            appendSubTask(parentId, targetTask, child),
-          );
-          // Evaluating to avoid unnecessary reference changes
-          if (updatedChildTasks.some(Boolean)) {
-            return updateTaskCheckStatus(task, updatedChildTasks);
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      };
-
-      const newParentId = findNewParentId(activeId, overId);
-      if (newParentId) return;
+      const newParentId = findNewParentId(activeId, overId, previousProject);
+      if (!newParentId) {
+        return previousProject;
+      }
       const detachResult = extractSubTask(activeId, previousProject);
-      if (!detachResult) return;
+      if (!detachResult) {
+        return previousProject;
+      }
       const activeTask = detachResult.subTask;
       const restProject = detachResult.restSourceTask;
+      console.log(newParentId);
       return (
         appendSubTask(newParentId, activeTask, restProject) || previousProject
       );
     });
   };
 
-  // const moveTaskToParent = (activeId) => {};
+  /*-------------------------*/
+  /*-----------helper function for Drag and Drop--------------*/
+  const extractSubTask = (targetId, sourceTask) => {
+    if (sourceTask.childTasks.some((child) => child.taskId === targetId)) {
+      const targetTask = sourceTask.childTasks.find(
+        (task) => task.taskId === targetId,
+      );
+      const newChildTasks = sourceTask.childTasks.filter(
+        (child) => child.taskId !== targetId,
+      );
+      return {
+        subTask: targetTask,
+        restSourceTask: syncParentChildCheckStatus(sourceTask, newChildTasks),
+      };
+    } else if (sourceTask.childTasks) {
+      //Update childTasks
+      const results = sourceTask.childTasks.map((child) =>
+        extractSubTask(targetId, child),
+      );
+      if (results.some(Boolean)) {
+        const targetTask = results.find(Boolean).subTask;
+        const updatedChildTasks = results.map(
+          (child) => child && child.restSourceTask,
+        );
+        return {
+          subTask: targetTask,
+          restSourceTask: updateTaskCheckStatus(sourceTask, updatedChildTasks),
+        };
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
   /*-------------------------*/
   /*-----------Control Task Property--------------*/
 
