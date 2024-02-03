@@ -192,7 +192,7 @@ const useProjectOperations = (projectId, setProject) => {
     });
   }, []);
 
-  const moveTaskInToChild = (activeId, overId) => {
+  const moveTaskInToChild = useCallback((activeId, overId) => {
     const findNewParentId = (activeId, overId, sourceTask) => {
       if (sourceTask.childTasks.some((child) => child.taskId === activeId)) {
         if (!overId) return false;
@@ -259,9 +259,9 @@ const useProjectOperations = (projectId, setProject) => {
         appendSubTask(newParentId, activeTask, restProject) || previousProject
       );
     });
-  };
+  }, []);
 
-  const moveTaskToParent = (activeId, parentId) => {
+  const moveTaskToParent = useCallback((activeId, parentId) => {
     const findGranParentId = (parentId, sourceTask) => {
       if (sourceTask.childTasks.some((child) => child.taskId === parentId)) {
         const granParentId = sourceTask.taskId;
@@ -328,7 +328,7 @@ const useProjectOperations = (projectId, setProject) => {
         previousProject
       );
     });
-  };
+  }, []);
 
   /*-------------------------*/
   /*-----------helper function for Drag and Drop--------------*/

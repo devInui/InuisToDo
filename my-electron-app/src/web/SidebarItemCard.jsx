@@ -21,25 +21,11 @@ const SidebarItemCard = ({
         justifyContent: "space-between",
       }}
     >
-      <div>
-        {project.isHidden ? (
-          <IconButton
-            sx={{ opacity: 0.5 }}
-            size="small"
-            onClick={() => toggleProjectVisibility(project.taskId)}
-          >
-            <VisibilityOffIcon fontSize="medium" />
-          </IconButton>
-        ) : (
-          <IconButton
-            sx={{ opacity: 1 }}
-            size="small"
-            onClick={() => toggleProjectVisibility(project.taskId)}
-          >
-            <VisibilityIcon fontSize="medium" />
-          </IconButton>
-        )}
-      </div>
+      <FrontUI
+        projectId={project.taskId}
+        isHidden={project.isHidden}
+        toggleProjectVisibility={toggleProjectVisibility}
+      />
       <div
         style={{
           whiteSpace: "nowrap",
@@ -51,17 +37,51 @@ const SidebarItemCard = ({
       >
         {project.taskName}
       </div>
-      <div style={{ paddingRight: "10px" }}>
-        <IconButton
-          sx={{ opacity: project.isHidden ? 0.3 : 0.8 }}
-          size="small"
-          onClick={() => deleteProject(project.taskId)}
-        >
-          <DeleteIcon fontSize="medium" />
-        </IconButton>
-      </div>
+      <BackUI
+        projectId={project.taskId}
+        isHidden={project.isHidden}
+        deleteProject={deleteProject}
+      />
     </div>
   );
 };
+
+const FrontUI = memo(({ projectId, isHidden, toggleProjectVisibility }) => {
+  return (
+    <div>
+      {isHidden ? (
+        <IconButton
+          sx={{ opacity: 0.5 }}
+          size="small"
+          onClick={() => toggleProjectVisibility(projectId)}
+        >
+          <VisibilityOffIcon fontSize="medium" />
+        </IconButton>
+      ) : (
+        <IconButton
+          sx={{ opacity: 1 }}
+          size="small"
+          onClick={() => toggleProjectVisibility(projectId)}
+        >
+          <VisibilityIcon fontSize="medium" />
+        </IconButton>
+      )}
+    </div>
+  );
+});
+
+const BackUI = memo(({ projectId, isHidden, deleteProject }) => {
+  return (
+    <div style={{ paddingRight: "10px" }}>
+      <IconButton
+        sx={{ opacity: isHidden ? 0.3 : 0.8 }}
+        size="small"
+        onClick={() => deleteProject(projectId)}
+      >
+        <DeleteIcon fontSize="medium" />
+      </IconButton>
+    </div>
+  );
+});
 
 export default memo(SidebarItemCard);

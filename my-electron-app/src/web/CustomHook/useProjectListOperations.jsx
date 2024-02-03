@@ -8,6 +8,7 @@ const useProjectListOperations = (setProjects) => {
       taskId: uuidv4(),
       isClose: false,
       isSelected: false,
+      isHidden: false,
       checked: false,
       childTasks: [],
       centerPinTaskId: null,
