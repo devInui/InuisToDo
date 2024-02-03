@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState, memo, useCallback } from "react";
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -44,19 +44,22 @@ function SortableChildTasks({
   setDebugOverInfo,
   setDebugMoveInfo,
 }) {
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        delay: 250,
-        tolerance: 0,
-      },
-    }),
+  const sensors = useCallback(
+    useSensors(
+      useSensor(PointerSensor, {
+        activationConstraint: {
+          delay: 250,
+          tolerance: 0,
+        },
+      }),
+    ),
+    [],
   );
   const [activeId, setActiveId] = useState(null);
-  const handleDragStart = (event) => {
+  const handleDragStart = useCallback((event) => {
     setActiveId(event.active.id);
-  };
-  const handleDragEnd = (event) => {
+  }, []);
+  const handleDragEnd = useCallback((event) => {
     const { active, over } = event;
     setActiveId(null);
     setDebugOverInfo(null); // for debug code
@@ -68,22 +71,23 @@ function SortableChildTasks({
     } else if (over && active.id !== over.id) {
       moveTaskInList(active.id, over.id);
     }
-  };
+  }, []);
   const detectDragTask = (activeId) => {
     return taskList.find((task) => task.taskId === activeId);
   };
   const draggingTask = detectDragTask(activeId);
 
   // for debug
-  const handleDragOver = (event) => {
+  const handleDragOver = useCallback((event) => {
     setDebugOverInfo(event);
-  };
-  const handleDragMove = (event) => {
+  }, []);
+  const handleDragMove = useCallback((event) => {
     setDebugMoveInfo(event);
+    // console.log(event);
     // if (event.delta.x < -100) console.log("fire MoveToParentEvent");
     // if (event.delta.x > 100)
     //   console.log("fire MoveToChildEvent", event.active.id, event.over.id);
-  };
+  }, []);
   return (
     <div style={{ marginLeft: "90px" }}>
       <DndContext
