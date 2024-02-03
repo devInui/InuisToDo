@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState, memo, useMemo, useCallback } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -24,26 +24,55 @@ import useProjectListOperations from "./CustomHook/useProjectListOperations";
 import SidebarItemCard from "./SidebarItemCard";
 
 const ProjectListSidebar = ({ projects, setProjects }) => {
+  const projectsHash = projects
+    .map(
+      ({ taskId, taskName, isHidden }) => `${taskId}-${taskName}-${isHidden}`,
+    )
+    .join("|");
+  const projectTitleList = useMemo(
+    () =>
+      projects.map((project) => ({
+        taskId: project.taskId,
+        taskName: project.taskName,
+        isHidden: project.isHidden,
+      })),
+    [projectsHash],
+  );
+  return (
+    <>
+      <InnerItemList
+        projectTitleList={projectTitleList}
+        setProjects={setProjects}
+      />
+    </>
+  );
+};
+
+const InnerItemList = memo(({ projectTitleList, setProjects }) => {
   const [activeId, setActiveId] = useState(null);
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 3,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
+
+  const sensors = useCallback(
+    useSensors(
+      useSensor(PointerSensor, {
+        activationConstraint: {
+          distance: 3,
+        },
+      }),
+      useSensor(KeyboardSensor, {
+        coordinateGetter: sortableKeyboardCoordinates,
+      }),
+    ),
+    [],
   );
 
   const { toggleProjectVisibility, deleteProject } =
     useProjectListOperations(setProjects);
 
-  const handleDragStart = (event) => {
+  const handleDragStart = useCallback((event) => {
     setActiveId(event.active.id);
-  };
+  }, []);
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = useCallback((event) => {
     const { active, over } = event;
 
     setActiveId(null);
@@ -60,7 +89,7 @@ const ProjectListSidebar = ({ projects, setProjects }) => {
         return arrayMove(projects, oldIndex, newIndex);
       });
     }
-  };
+  }, []);
 
   return (
     <DndContext
@@ -71,7 +100,7 @@ const ProjectListSidebar = ({ projects, setProjects }) => {
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={projects.map((project) => project.taskId)}
+        items={projectTitleList.map(({ taskId }) => taskId)}
         strategy={verticalListSortingStrategy}
       >
         <div
@@ -85,10 +114,10 @@ const ProjectListSidebar = ({ projects, setProjects }) => {
             zIndex: 10,
           }}
         >
-          {projects.map((project) => (
+          {projectTitleList.map((item) => (
             <SortableProjectListItem
-              key={project.taskId}
-              project={project}
+              key={item.taskId}
+              project={item}
               toggleProjectVisibility={toggleProjectVisibility}
               deleteProject={deleteProject}
             />
@@ -106,7 +135,9 @@ const ProjectListSidebar = ({ projects, setProjects }) => {
             }}
           >
             <SidebarItemCard
-              project={projects.find((project) => project.taskId === activeId)}
+              project={projectTitleList.find(
+                (project) => project.taskId === activeId,
+              )}
               toggleProjectVisibility={toggleProjectVisibility}
               deleteProject={deleteProject}
             />
@@ -115,6 +146,6 @@ const ProjectListSidebar = ({ projects, setProjects }) => {
       </DragOverlay>
     </DndContext>
   );
-};
+});
 
 export default memo(ProjectListSidebar);
