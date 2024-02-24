@@ -3,6 +3,7 @@ import { BrowserWindow, app, ipcMain } from "electron";
 import Store from "electron-store";
 import setMenu from "./menu";
 import handleZoomChange from "./zoomHandler";
+import initProjects from "./initProject";
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -43,7 +44,7 @@ const store = new Store({
 });
 
 ipcMain.handle("electron-store-get-projects", async () => {
-  return store.get("projects", []);
+  return store.get("projects", initProjects);
 });
 
 ipcMain.handle("electron-store-set-projects", async (_event, data) => {
