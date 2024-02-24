@@ -202,7 +202,7 @@ const useProjectOperations = (projectId, setProject) => {
         const overIndex = sourceTask.childTasks.findIndex(
           (task) => task.taskId === overId,
         );
-        const parentIndex = overIndex < activeIndex ? overIndex : overIndex - 1;
+        const parentIndex = overIndex > activeIndex ? overIndex : overIndex - 1;
         if (parentIndex < 0) return false;
         const parentId =
           parentIndex >= 0 ? sourceTask.childTasks[parentIndex].taskId : false;
