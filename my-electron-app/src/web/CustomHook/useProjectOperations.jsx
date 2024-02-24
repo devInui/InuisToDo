@@ -532,6 +532,7 @@ const useProjectOperations = (projectId, setProject) => {
   // sync checked state between parent and child task
   const syncParentChildCheckStatus = (task, newChildren) => {
     const isConsistent =
+      task.childTasks.length === 0 ||
       task.checked === task.childTasks.every((child) => Boolean(child.checked));
     const isComplete = newChildren.every((child) => Boolean(child.checked));
     if (isConsistent && !isComplete === task.checked && newChildren.length) {
